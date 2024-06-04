@@ -1,0 +1,15 @@
+* {
+  margin:0;
+}
+body {
+  background-color: black;
+}
+h1 {
+  color:aquamarine;
+}
+
+#scene-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
