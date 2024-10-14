@@ -5,7 +5,7 @@ const container = document.querySelector('#allInTheFish');
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
-  75, window.innerWidth / window.innerHeight , 0.1, 1000
+  85, window.innerWidth / window.innerHeight , 0.1, 1000
 ); //fov, aspect, near, far
 
 const renderer = new THREE.WebGLRenderer();
@@ -13,32 +13,32 @@ renderer.setSize(window.innerWidth, window.innerHeight, false);
 renderer.domElement.id = "bithch";
 container.appendChild(renderer.domElement);
 
-camera.position.set(2, 4, 7.5); //(depth, up-down ,left-right)
+//(depth, up-down ,left-right)
+camera.position.set(4,0,0)
 
-camera.lookAt(1.5,4,7.5);
+camera.lookAt(0,0,0);
 
 const loader = new GLTFLoader();
 
 let model;
 let instances = [];
 
-loader.load('model/fish-centered.glb', function(gltf) {
+loader.load('model/fish2.glb', function(gltf) {
   model = gltf.scene;
-  model.rotation.y -= 1.5;
+  // scene.add(model);
 
-  const rows = 20;
-  const cols = 9;
-  const space = 1;
+  const rows = 5;
+  const cols = 5;
 
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       const instance = model.clone();
       instance.position.set(-4, j, i);
       instances.push(instance);
-      instance.userData.id = `fish_${i}_${j}`;
       scene.add(instance);
     }
   }
+  console.log(instances);
 
 }, undefined, function(error) {
   console.error('error loading: ', error);
@@ -47,29 +47,14 @@ loader.load('model/fish-centered.glb', function(gltf) {
 
 function animate() {
   requestAnimationFrame(animate);
-
-  // instances.forEach(instance => {
-  //   instance.rotation.y += 0.01;
-  // });
-
+  
   instances.forEach(instance => {
-    const vector = new THREE.Vector3();
-    raycaster.ray.at(10, vector);
-
-    const angle = Math.atan2(
-      vector.x - instance.position.x,
-      vector.z - instance.position.z
-    ); //angle is the problem
-    // => make it math rotation instance and position mouse
-
-    instance.rotation.y = angle;
-    instance.rotation.z = angle;
-    instance.rotation.x = angle;
-    console.log(angle)
+    instance.rotation.set(0, mouse.x*1.5, mouse.y*1.5);
+    //the solution to thy problem
   });
 
   renderer.render(scene, camera);
-}
+};
 
 animate();
 
